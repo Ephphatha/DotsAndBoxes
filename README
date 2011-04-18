@@ -1,0 +1,10 @@
+Originally written as an assignment for my Win32 class ITC226, this is a
+somewhat featureful implementation of the pen and paper game "Dots and Boxes".
+
+Features:
+  Supports game boards up to 50x50 dots in size
+  Effectively unlimited player count
+  Custom colours for each player
+  Basic AI (add a player with "[AI]" in their name)
+  Able to save/load player lists and game state
+  Dynamic resizing of game board
