@@ -1,2 +1,5 @@
 
 *.o
+/DotsAndBoxes/Debug/DotsAndBoxes_manifest.rc
+/DotsAndBoxes/Release/resources.res
+*.sdf

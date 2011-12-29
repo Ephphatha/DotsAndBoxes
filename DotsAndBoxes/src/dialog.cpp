@@ -36,7 +36,7 @@ INT_PTR CALLBACK DlgProcAddPlayer(HWND hwnd,
                                   LPARAM lParam)
 {
     int red, green, blue;
-    char* name;
+    WCHAR* name;
     BOOL success = TRUE, last = TRUE;
     switch(message)
     {
@@ -65,12 +65,12 @@ INT_PTR CALLBACK DlgProcAddPlayer(HWND hwnd,
                                               FALSE);
                     success = success & last;
 
-                    name = (char*)calloc(21, sizeof(char));
+                    name = (WCHAR*)calloc(21, sizeof(WCHAR));
                     if(!GetDlgItemText(hwnd, IDC_EDT_NAME, name, 21))
                     {
                         MessageBox(hwnd,
-                                   "Please enter a name.",
-                                   "Value Error",
+                                   L"Please enter a name.",
+                                   L"Value Error",
                                    MB_OK | MB_ICONWARNING);
                     }
                     else if(!success ||
@@ -79,8 +79,8 @@ INT_PTR CALLBACK DlgProcAddPlayer(HWND hwnd,
                             (blue > 255) || (blue < 0))
                     {
                         MessageBox(hwnd,
-                                   "Colour values must be between 255 and 0",
-                                   "Value Error",
+                                   L"Colour values must be between 255 and 0",
+                                   L"Value Error",
                                    MB_OK | MB_ICONWARNING);
                     }
                     else
@@ -139,32 +139,37 @@ INT_PTR CALLBACK DlgProcGameOptions(HWND hwnd,
                        (height < 2))
                     {
                         MessageBox(hwnd,
-                                   "The grid must be at least 2 by 2 dots.",
-                                   "Value Error",
+                                   L"The grid must be at least 2 by 2 dots.",
+                                   L"Value Error",
                                    MB_OK | MB_ICONWARNING);
+						break;
                     }
-                    else if((width < 50) &&
-                            (height < 50))
+                    else if((width > 50) ||
+                            (height > 50))
                     {
                         MessageBox(hwnd,
-                            "Each grid dimension must be less than 50.",
-                            "You shall not pass!",
+                            L"Each grid dimension must be less than 50.",
+                            L"You shall not pass!",
                             MB_OK | MB_ICONWARNING);
+						break;
                     }
-                    else if(((width < 20) &&
-                            (height < 20)) ||
-                            MessageBox(hwnd,
-                            "Do you really want to make the grid this large?",
-                            "Whoa!",
-                            MB_YESNO | MB_ICONWARNING) == IDYES)
+                    else if((width > 20) ||
+                            (height > 20))
                     {
-                        
-                            SendMessage(GetWindow(hwnd, GW_OWNER),
-                                        EDITGAMESTATE,
-                                        (WPARAM)((width * 2) - 1),
-                                        (LPARAM)((height * 2) - 1));
-                            PostMessage(hwnd, WM_COMMAND, IDCANCEL, 0);
+                        if(MessageBox(hwnd,
+                            L"Do you really want to make the grid this large?",
+                            L"Whoa!",
+                            MB_YESNO | MB_ICONWARNING) == IDNO)
+                        {
+                            break;
+                        }
                     }
+
+                    SendMessage(GetWindow(hwnd, GW_OWNER),
+                        EDITGAMESTATE,
+                        (WPARAM)((width * 2) - 1),
+                        (LPARAM)((height * 2) - 1));
+                    PostMessage(hwnd, WM_COMMAND, IDCANCEL, 0);
                     break;
 
                 case IDCANCEL:
@@ -203,8 +208,8 @@ INT_PTR CALLBACK DlgProcTimeLimit(HWND hwnd,
                     if(!success)
                     {
                         MessageBox(hwnd,
-                                   "Please enter a time limit.",
-                                   "Value Error",
+                                   L"Please enter a time limit.",
+                                   L"Value Error",
                                    MB_OK | MB_ICONWARNING);
                     }
                     else
@@ -235,7 +240,7 @@ BOOL MenuCommands(HWND hwnd,
 {   //TODO: Split this function sensibly.
     HWND hwndDialog = NULL;
     OPENFILENAME ofn;
-    char* buffer;
+    WCHAR* buffer;
     switch(LOWORD(wParam))
     {
         case IDM_NEW_GAME:
@@ -243,14 +248,14 @@ BOOL MenuCommands(HWND hwnd,
             return 0;
 
         case IDM_LOAD_GAME:
-            buffer = (char*)calloc(MAX_PATH, sizeof(char));
+            buffer = (WCHAR*)calloc(MAX_PATH, sizeof(WCHAR));
             ZeroMemory(&ofn, sizeof(ofn));
             ofn.lStructSize = sizeof(ofn);
             ofn.hwndOwner = hwnd;
             ofn.lpstrFile = buffer;
             ofn.lpstrFile[0] = '\0';
-            ofn.nMaxFile = MAX_PATH * sizeof(char);
-            ofn.lpstrFilter = "Dots and Boxes Game (.dbg)\0*.DBG\0\0";
+            ofn.nMaxFile = MAX_PATH * sizeof(WCHAR);
+            ofn.lpstrFilter = L"Dots and Boxes Game (.dbg)\0*.DBG\0\0";
             ofn.nFilterIndex = 1;
             ofn.lpstrFileTitle = NULL;
             ofn.nMaxFileTitle = 0;
@@ -264,15 +269,15 @@ BOOL MenuCommands(HWND hwnd,
             return 0;
 
         case IDM_SAVE_GAME:
-            buffer = (char*)calloc(MAX_PATH, sizeof(char));
+            buffer = (WCHAR*)calloc(MAX_PATH, sizeof(WCHAR));
             ZeroMemory(&ofn, sizeof(ofn));
             ofn.lStructSize = sizeof(ofn);
             ofn.hwndOwner = hwnd;
             ofn.lpstrFile = buffer;
             ofn.lpstrFile[0] = '\0';
-            ofn.lpstrDefExt = "dbg";
-            ofn.nMaxFile = MAX_PATH * sizeof(char);
-            ofn.lpstrFilter = "Dots and Boxes Game (.dbg)\0*.DBG\0\0";
+            ofn.lpstrDefExt = L"dbg";
+            ofn.nMaxFile = MAX_PATH * sizeof(WCHAR);
+            ofn.lpstrFilter = L"Dots and Boxes Game (.dbg)\0*.DBG\0\0";
             ofn.nFilterIndex = 1;
             ofn.lpstrFileTitle = NULL;
             ofn.nMaxFileTitle = 0;
@@ -298,14 +303,14 @@ BOOL MenuCommands(HWND hwnd,
             return 0;
 
         case IDM_LOAD_PLAYERS:
-            buffer = (char*)calloc(MAX_PATH, sizeof(char));
+            buffer = (WCHAR*)calloc(MAX_PATH, sizeof(WCHAR));
             ZeroMemory(&ofn, sizeof(ofn));
             ofn.lStructSize = sizeof(ofn);
             ofn.hwndOwner = hwnd;
             ofn.lpstrFile = buffer;
             ofn.lpstrFile[0] = '\0';
-            ofn.nMaxFile = MAX_PATH * sizeof(char);
-            ofn.lpstrFilter = "Dots and Boxes Players (.dbp)\0*.DBP\0\0";
+            ofn.nMaxFile = MAX_PATH * sizeof(WCHAR);
+            ofn.lpstrFilter = L"Dots and Boxes Players (.dbp)\0*.DBP\0\0";
             ofn.nFilterIndex = 1;
             ofn.lpstrFileTitle = NULL;
             ofn.nMaxFileTitle = 0;
@@ -319,15 +324,15 @@ BOOL MenuCommands(HWND hwnd,
             return 0;
 
         case IDM_SAVE_PLAYERS:
-            buffer = (char*)calloc(MAX_PATH, sizeof(char));
+            buffer = (WCHAR*)calloc(MAX_PATH, sizeof(WCHAR));
             ZeroMemory(&ofn, sizeof(ofn));
             ofn.lStructSize = sizeof(ofn);
             ofn.hwndOwner = hwnd;
             ofn.lpstrFile = buffer;
             ofn.lpstrFile[0] = '\0';
-            ofn.lpstrDefExt = "dbp";
-            ofn.nMaxFile = MAX_PATH * sizeof(char);
-            ofn.lpstrFilter = "Dots and Boxes Players (.dbp)\0*.DBP\0\0";
+            ofn.lpstrDefExt = L"dbp";
+            ofn.nMaxFile = MAX_PATH * sizeof(WCHAR);
+            ofn.lpstrFilter = L"Dots and Boxes Players (.dbp)\0*.DBP\0\0";
             ofn.nFilterIndex = 1;
             ofn.lpstrFileTitle = NULL;
             ofn.nMaxFileTitle = 0;

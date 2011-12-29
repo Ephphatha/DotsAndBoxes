@@ -33,7 +33,7 @@
 BOOL AddPlayer(Player** players,
                int* totalPlayers,
                int* maxPlayers,
-               char* name,
+               WCHAR* name,
                COLORREF colour,
                BOOL isPlaying,
                int moves,
@@ -54,7 +54,7 @@ BOOL AddPlayer(Player** players,
         for(int i = 0; i < (*totalPlayers); i++)
         {   //Roll your own realloc... Will need to be updated if I change the
             //Player struct, or maybe I'll make it a binary copy instead.
-            strcpy(newPlayerList[i].name, (*players)[i].name);
+            wcscpy_s(newPlayerList[i].name, (*players)[i].name);
             newPlayerList[i].colour = (*players)[i].colour;
             newPlayerList[i].isPlaying = (*players)[i].isPlaying;
             newPlayerList[i].moves = (*players)[i].moves;
@@ -64,9 +64,9 @@ BOOL AddPlayer(Player** players,
         free((*players));
         (*players) = newPlayerList;
     }
-    if(name && ((int)strlen(name) < 21))
+    if(name && ((int)wcslen(name) < 21))
     {
-        strcpy((*players)[(*totalPlayers)].name, name);
+        wcscpy_s((*players)[(*totalPlayers)].name, name);
         (*players)[(*totalPlayers)].colour = colour;
         (*players)[(*totalPlayers)].isPlaying = isPlaying;
         (*players)[(*totalPlayers)].moves = moves;

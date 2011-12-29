@@ -190,7 +190,7 @@
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 HINSTANCE hInstance;
-char szClassName[ ] = "WindowsApp";
+WCHAR szClassName[ ] = L"WindowsApp";
 
 int WINAPI WinMain (HINSTANCE hThisInstance,
                     HINSTANCE hPrevInstance,
@@ -238,7 +238,7 @@ int WINAPI WinMain (HINSTANCE hThisInstance,
     hwnd = CreateWindowEx (
            0,
            szClassName,
-           "Dots And Boxes",
+           L"Dots And Boxes",
            WS_OVERLAPPEDWINDOW,
            CW_USEDEFAULT,
            CW_USEDEFAULT,
@@ -292,7 +292,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
     static int timeLimit = 0;
 
     //Text buffers.
-    static char* buffer = NULL;
+    static WCHAR* buffer = NULL;
 
     switch (message)
     {
@@ -319,9 +319,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case ADDPLAYER:
             if(!AddPlayer(&players, &totalPlayers, &maxPlayers,
-                          (char*)wParam, (COLORREF)lParam))
+                          (WCHAR*)wParam, (COLORREF)lParam))
             {
-                MessageBox(hwnd, "Couldn't add the player.", "Fail",
+                MessageBox(hwnd, L"Couldn't add the player.", L"Fail",
                            MB_OK | MB_ICONWARNING);
             }
             else if(GameInProgress(gameState, gridWidth, gridHeight))
@@ -341,8 +341,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                 if(((int)wParam < gridWidth) || ((int)lParam < gridHeight))
                 {
                     if(MessageBox(hwnd,
-                              "If you continue the game will be reset",
-                              "A grid dimension is decreasing.",
+                              L"If you continue the game will be reset",
+                              L"A grid dimension is decreasing.",
                               MB_OKCANCEL | MB_ICONWARNING) == IDOK)
                     {
                         ClearGame(gameState, gridWidth, gridHeight, players,
@@ -355,8 +355,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                     }
                 }
                 else if(MessageBox(hwnd,
-                              "Select no to play on with the current gamestate",
-                              "Would you like to start a new game?",
+                              L"Select no to play on with the current gamestate",
+                              L"Would you like to start a new game?",
                               MB_YESNO | MB_ICONWARNING) == IDYES)
                 {
                     ClearGame(gameState, gridWidth, gridHeight, players,
@@ -379,11 +379,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
             return 0;
 
         case LOADGAME:
-            if(!LoadGame((char*)wParam, &gameState, &gridWidth, &gridHeight,
+            if(!LoadGame((WCHAR*)wParam, &gameState, &gridWidth, &gridHeight,
                          &activePlayer, &timeLimit))
             {
-                MessageBox(hwnd, "Couldn't open the file.",
-                           "Invalid file.",
+                MessageBox(hwnd, L"Couldn't open the file.",
+                           L"Invalid file.",
                            MB_OK | MB_ICONWARNING);
             }
             else
@@ -394,25 +394,25 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                                        players, totalPlayers, &activePlayer);
                 }
             }
-            free((char*)wParam);
+            free((WCHAR*)wParam);
             return 0;
 
         case SAVEGAME:
-            if(!SaveGame((char*)wParam, gameState, gridWidth, gridHeight,
+            if(!SaveGame((WCHAR*)wParam, gameState, gridWidth, gridHeight,
                          activePlayer, timeLimit))
             {
-                MessageBox(hwnd, "Your game was not saved.",
-                           "Error saving file.",
+                MessageBox(hwnd, L"Your game was not saved.",
+                           L"Error saving file.",
                            MB_OK | MB_ICONWARNING);
             }
-            free((char*)wParam);
+            free((WCHAR*)wParam);
             return 0;
 
         case NEWGAME:
             if(GameInProgress(gameState, gridWidth, gridHeight) &&
                (MessageBox(hwnd,
-                           "This will clear the game in progress.",
-                           "Start a new game?",
+                           L"This will clear the game in progress.",
+                           L"Start a new game?",
                            MB_YESNO | MB_ICONWARNING) == IDYES))
             {
                 ClearGame(gameState, gridWidth, gridHeight,
@@ -424,8 +424,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         case QUITGAME:
             if(!GameInProgress(gameState, gridWidth, gridHeight) ||
                (MessageBox(hwnd,
-                          "Please remember to save your game and player data.",
-                          "Are you sure you want to exit?",
+                          L"Please remember to save your game and player data.",
+                          L"Are you sure you want to exit?",
                           MB_YESNO | MB_ICONWARNING) == IDYES))
             {
                 PostMessage(hwnd, WM_DESTROY, 0, 0);
@@ -433,11 +433,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
             return 0;
 
         case LOADPLAYERS:
-            if(!LoadPlayers((char*)wParam, &players,
+            if(!LoadPlayers((WCHAR*)wParam, &players,
                             &totalPlayers, &maxPlayers))
             {
-                MessageBox(hwnd, "Maybe your player data is corrupt.",
-                           "Couldn't load the player data",
+                MessageBox(hwnd, L"Maybe your player data is corrupt.",
+                           L"Couldn't load the player data",
                            MB_OK | MB_ICONWARNING);
             }
             else
@@ -448,17 +448,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                                        players, totalPlayers, &activePlayer);
                 }
             }
-            free((char*)wParam);
+            free((WCHAR*)wParam);
             return 0;
 
         case SAVEPLAYERS:
-            if(!SavePlayers((char*)wParam, players, totalPlayers))
+            if(!SavePlayers((WCHAR*)wParam, players, totalPlayers))
             {
-                MessageBox(hwnd, "Couldn't save the player data",
-                           "Error saving player data.",
+                MessageBox(hwnd, L"Couldn't save the player data",
+                           L"Error saving player data.",
                            MB_OK | MB_ICONWARNING);
             }
-            free((char*)wParam);
+            free((WCHAR*)wParam);
             return 0;
 
         case PAUSETIMER:
@@ -544,7 +544,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
             {   //Just a little easter egg for people who don't have access
                 //to the source.
                 case 't':
-                    MessageBox(NULL, "Boo Accounting.", "T says:", MB_OK);
+                    MessageBox(NULL, L"Boo Accounting.", L"T says:", MB_OK);
                     break;
             }
             return 0;
@@ -567,12 +567,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
 
             if((totalPlayers > 1) && (!gameWon) &&
-               strstr(players[activePlayer - 1].name, "[AI]"))
+               wcsstr(players[activePlayer - 1].name, L"[AI]"))
             {
                 POINT aiMove = PlayMove(gameState, gridWidth, gridHeight);
                 switch(RegisterInput(gameState, gridWidth, gridHeight,
                                      aiMove.x, aiMove.y,
-                                     players, activePlayer) > 0)
+                                     players, activePlayer))
                 {
                     case -1:
                         break;
@@ -641,32 +641,32 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             #ifdef DEBUG
             //Just a bit of debug information.
-            buffer = (char*)calloc(((int)floor(gridWidth / 2.0) + 1) * 4,
-                                    sizeof(char));
+            buffer = (WCHAR*)calloc(((int)floor(gridWidth / 2.0) + 1) * 4,
+                                    sizeof(WCHAR));
 
             initialTextAlignment = SetTextAlign(hdcMem, TA_RIGHT);
             for(int i = 0; i < gridHeight; i++)
             {
-                sprintf(buffer, "%d", gameState[0][i]);
+                sprintf_s(buffer, "%d", gameState[0][i]);
                 for(int j = 1; j < gridWidth; j++)
                 {
-                    sprintf(buffer, "%s %d", buffer, gameState[j][i]);
+                    sprintf_s(buffer, "%s %d", buffer, gameState[j][i]);
                 }
 
                 TextOut(hdcMem,
                         windowSize.right,
                         windowSize.bottom - ((gridHeight - i) * 20),
                         buffer,
-                        (int)strlen(buffer));
+                        (int)wcslen(buffer));
             }
             SetTextAlign(hdcMem, initialTextAlignment);
             free(buffer);
             buffer = NULL;
 
-            buffer = (char*)calloc(100, sizeof(char));
-            sprintf(buffer, "Boxes filled: %d",
+            buffer = (WCHAR*)calloc(100, sizeof(WCHAR));
+            sprintf_s(buffer, "Boxes filled: %d",
                     CountBoxes(gameState, gridWidth, gridHeight));
-            TextOut(hdcMem, 0, 0, buffer, (int)strlen(buffer));
+            TextOut(hdcMem, 0, 0, buffer, (int)wcslen(buffer));
             free(buffer);
             buffer = NULL;
             #endif

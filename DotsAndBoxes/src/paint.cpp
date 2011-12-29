@@ -237,58 +237,58 @@ BOOL DrawSidebar(HDC hdc,
     TEXTMETRIC tm;
     GetTextMetrics(hdc, &tm);
     int lineHeight = tm.tmHeight + tm.tmExternalLeading;
-    char* buffer = (char*)calloc(100, sizeof(char));
+    WCHAR* buffer = (WCHAR*)calloc(100, sizeof(WCHAR));
 
     initialColour = SetTextColor(hdc, players[activePlayer].colour);
     if(totalPlayers && timeLimit && lastMoveTime)
     {
-        sprintf(buffer, "%d seconds to move",
+        swprintf_s(buffer, 100, L"%d seconds to move",
                 timeLimit - (time(0) - lastMoveTime));
-        TextOut(hdc, xAnchor, lineHeight, buffer, (int)strlen(buffer));
-        sprintf(buffer, "%s has", players[activePlayer].name);
+        TextOut(hdc, xAnchor, lineHeight, buffer, (int)wcslen(buffer));
+        swprintf_s(buffer, 100, L"%s has", players[activePlayer].name);
     }
     else if(gameWon == 2)
     {
-        sprintf(buffer, "%s wins", players[activePlayer].name);
+        swprintf_s(buffer, 100, L"%s wins", players[activePlayer].name);
     }
     else if(gameWon == 1)
     {
         SetTextColor(hdc, players[HighestScore(players, totalPlayers)].colour);
-        sprintf(buffer, "%s wins",
+        swprintf_s(buffer, 100, L"%s wins",
                 players[HighestScore(players, totalPlayers)].name);
     }
     else if(gameWon == -1)
     {
-        strcpy(buffer, "This game is a draw");
+        wcscpy_s(buffer, 100, L"This game is a draw");
     }
     else if(totalPlayers == 1)
     {
-        int lastIndex = strlen(players[activePlayer].name) - 1;
-        char lastChar = players[activePlayer].name[lastIndex];
-        if((lastChar == 'a') || (lastChar == 'e') || (lastChar == 'i'))
+        int lastIndex = wcslen(players[activePlayer].name) - 1;
+        WCHAR lastChar = players[activePlayer].name[lastIndex];
+        if((lastChar == L'a') || (lastChar == L'e') || (lastChar == L'i'))
         {
-            strcpy(buffer, "against herself.");
+            wcscpy_s(buffer, 100, L"against herself.");
         }
-        else if(lastChar == 'y')
+        else if(lastChar == L'y')
         {
-            strcpy(buffer, "against themselves.");
+            wcscpy_s(buffer, 100, L"against themselves.");
         }
         else
         {
-            strcpy(buffer, "against himself.");
+            wcscpy_s(buffer, 100, L"against himself.");
         }
-        TextOut(hdc, xAnchor, lineHeight, buffer, (int)strlen(buffer));
-        sprintf(buffer, "%s is playing", players[activePlayer].name);
+        TextOut(hdc, xAnchor, lineHeight, buffer, (int)wcslen(buffer));
+        swprintf_s(buffer, 100, L"%s is playing", players[activePlayer].name);
     }
     else if(totalPlayers)
     {
-        sprintf(buffer, "It is %s's turn", players[activePlayer].name);
+        swprintf_s(buffer, 100, L"It is %s's turn", players[activePlayer].name);
     }
     else
     {
-        strcpy(buffer, "Please add a player");
+        wcscpy_s(buffer, 100, L"Please add a player");
     }
-    TextOut(hdc, xAnchor, 0, buffer, (int)strlen(buffer));
+    TextOut(hdc, xAnchor, 0, buffer, (int)wcslen(buffer));
 
     for(int i = 0; i < totalPlayers; i++)
     {
@@ -301,22 +301,22 @@ BOOL DrawSidebar(HDC hdc,
             SetTextColor(hdc, 0x00777777);
         }
 
-        sprintf(buffer, "%s's boxes:", players[i].name);
+        swprintf_s(buffer, 100, L"%s's boxes:", players[i].name);
         TextOut(hdc, xAnchor, (lineHeight * 2) + (i * lineHeight * 2),
-                buffer, (int)strlen(buffer));
+                buffer, (int)wcslen(buffer));
 
-        sprintf(buffer, "%s's wins:", players[i].name);
+        swprintf_s(buffer, 100, L"%s's wins:", players[i].name);
         TextOut(hdc, xAnchor, (lineHeight * 3) + (i * lineHeight * 2),
-                buffer, (int)strlen(buffer));
+                buffer, (int)wcslen(buffer));
 
         initialTextAlignment = SetTextAlign(hdc, TA_RIGHT);
-        sprintf(buffer, "%d", players[i].boxes);
+        swprintf_s(buffer, 100, L"%d", players[i].boxes);
         TextOut(hdc, xAnchor + width, (lineHeight * 2) + (i * lineHeight * 2),
-                buffer, (int)strlen(buffer));
+                buffer, (int)wcslen(buffer));
 
-        sprintf(buffer, "%d", players[i].score);
+        swprintf_s(buffer, 100, L"%d", players[i].score);
         TextOut(hdc, xAnchor + width, (lineHeight * 3) + (i * lineHeight * 2),
-                buffer, (int)strlen(buffer));
+                buffer, (int)wcslen(buffer));
         SetTextAlign(hdc, initialTextAlignment);
     }
 

@@ -36,7 +36,7 @@
 
 typedef struct _player
 {
-    char name[21];
+    WCHAR name[21];
     COLORREF colour;
     BOOL isPlaying;
     int moves;
@@ -47,7 +47,7 @@ typedef struct _player
 BOOL AddPlayer(Player** players,
                int* totalPlayers,
                int* maxPlayers,
-               char* name,
+               WCHAR* name,
                COLORREF colour,
                BOOL isPlaying = TRUE,
                int moves = 0,

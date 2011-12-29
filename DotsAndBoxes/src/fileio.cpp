@@ -30,7 +30,7 @@
 */
 #include "fileio.h"
 
-BOOL LoadGame(char* filename,
+BOOL LoadGame(WCHAR* filename,
               int*** gameState,
               int* gridWidth,
               int* gridHeight,
@@ -41,7 +41,8 @@ BOOL LoadGame(char* filename,
     //file is. If it isn't equal to 4 ints, plus the width * height given in
     //the file returns 0 and closes the file. Otherwise, it reads the rest of
     //the data into the gamestate and returns true.
-    FILE *inputFilePtr = fopen(filename, "rb");
+    FILE *inputFilePtr = NULL;
+    _wfopen_s(&inputFilePtr, filename, L"rb");
     if(inputFilePtr)
     {
         int newGridWidth = 0, newGridHeight = 0;
@@ -97,7 +98,7 @@ BOOL LoadGame(char* filename,
     return 0;
 }
 
-BOOL SaveGame(char* filename,
+BOOL SaveGame(WCHAR* filename,
               int** gameState,
               int gridWidth,
               int gridHeight,
@@ -105,7 +106,8 @@ BOOL SaveGame(char* filename,
               int timeLimit)
 {   //Writes the width and height to the start of the file, the active player,
     //the timeLimit per turn, then the gamestate immediately follows.
-    FILE *outputFilePtr = fopen(filename, "wb");
+    FILE *outputFilePtr = NULL;
+    _wfopen_s(&outputFilePtr, filename, L"wb");
     if(outputFilePtr)
     {
         fwrite(&gridWidth, sizeof(int), 1, outputFilePtr);
@@ -124,14 +126,15 @@ BOOL SaveGame(char* filename,
     return 0;
 }
 
-BOOL LoadPlayers(char* filename,
+BOOL LoadPlayers(WCHAR* filename,
                  Player** players,
                  int* totalPlayers,
                  int* maxPlayers)
 {   //Reads the expected number of players from the start of the file, then
     //checks to make sure the filesize is equal to that number of player
     //structs. If the file is the right size, reads it in, otherwise returns 0.
-    FILE *inputFilePtr = fopen(filename, "rb");
+    FILE *inputFilePtr = NULL;
+    _wfopen_s(&inputFilePtr, filename, L"rb");
     if(inputFilePtr)
     {
         int newTotalPlayers;
@@ -178,10 +181,11 @@ BOOL LoadPlayers(char* filename,
     return 0;
 }
 
-BOOL SavePlayers(char* filename, Player* players, int totalPlayers)
+BOOL SavePlayers(WCHAR* filename, Player* players, int totalPlayers)
 {   //Writes the number of players in the player struct, then the contents of
     //the array of players.
-    FILE *outputFilePtr = fopen(filename, "wb");
+    FILE *outputFilePtr = NULL;
+    _wfopen_s(&outputFilePtr, filename, L"wb");
     if(outputFilePtr && totalPlayers)
     {
         fwrite(&totalPlayers, sizeof(int), 1, outputFilePtr);

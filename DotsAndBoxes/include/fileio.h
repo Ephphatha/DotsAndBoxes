@@ -33,26 +33,26 @@
 #include <windows.h>
 #include <stdio.h>
 #include "game.h"
-BOOL LoadGame(char* filename,
+BOOL LoadGame(WCHAR* filename,
               int*** gameState,
               int* gridWidth,
               int* gridHeight,
               int* activePlayer,
               int* timeLimit);
 
-BOOL SaveGame(char* filename,
+BOOL SaveGame(WCHAR* filename,
               int** gameState,
               int gridWidth,
               int gridHeight,
               int activePlayer,
               int timeLimit);
 
-BOOL LoadPlayers(char* filename,
+BOOL LoadPlayers(WCHAR* filename,
                  Player** players,
                  int* totalPlayers,
                  int* maxPlayers);
 
-BOOL SavePlayers(char* filename,
+BOOL SavePlayers(WCHAR* filename,
                  Player* players,
                  int totalPlayers);
 #endif
